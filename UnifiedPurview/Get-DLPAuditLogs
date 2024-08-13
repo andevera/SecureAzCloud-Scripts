@@ -1,0 +1,154 @@
+Function Get-DLPAuditLog {
+    Write-Host "Retrieving Audit Records for the date range between $($StartTime) and $($GlobalEndTime)"
+
+    $CSVName = (Get-Date).AddDays(-1).ToString('MM-dd-yyyy') + "_ActivityData.txt"
+    $TotalCount = 0
+
+    while ($True) {
+        $EndTime = $StartTime.AddMinutes($IntervalMinutes)
+
+        if ($EndTime -gt $GlobalEndTime) {
+            $EndTime = $GlobalEndTime
+        }
+
+        if ($StartTime -eq $EndTime) {
+            break
+        }
+
+        $SessionID = [Guid]::NewGuid().ToString() + "_ExtractLogs_" + (Get-Date).ToString("yyyyMMddHHmmssfff")
+        $SW = [Diagnostics.StopWatch]::StartNew()
+
+        Start-Sleep -Seconds 5
+        $ResultActivity = Export-ActivityExplorerData -StartTime (Get-Date $StartTime -Format yyyy-MM-ddTHH:mm:ss) -EndTime (Get-Date $EndTime -Format yyyy-MM-ddTHH:mm:ss) -Filter1 @("Activity", "DLPRuleMatch") -OutputFormat csv 
+        $PageCookie = $ResultActivity.WaterMark
+        $ProcessCSV = $ResultActivity.ResultData
+        $TotalResultCount = $ResultActivity.TotalResultCount 
+        $MyLastpage = $ResultActivity.LastPage
+
+        Write-Host "Total Records are:" $TotalResultCount "for time $StartTime and $EndTime" -ForegroundColor Green
+
+        while ($MyLastpage -ne $true) {
+            $ResultActivityNext = Export-ActivityExplorerData -StartTime (Get-Date $StartTime -Format yyyy-MM-ddTHH:mm:ss) -EndTime (Get-Date $EndTime -Format yyyy-MM-ddTHH:mm:ss) -Filter1 @("Activity", "DLPRuleMatch") -OutputFormat csv -PageCookie $PageCookie
+            $PageCookie = $ResultActivityNext.WaterMark
+            $ProcessCSV += $ResultActivityNext.ResultData
+            $MyLastpage = $ResultActivityNext.LastPage
+        }
+
+        $StartTime = $EndTime
+        $FinalCSV = $ProcessCSV | ConvertFrom-Csv
+
+        $existingRecords = @()
+        if (Test-Path "C:\DummyPath\CopyDirectory\$CSVName") {
+            $existingRecords = Import-Csv -Path "C:\DummyPath\CopyDirectory\$CSVName" -Delimiter "`t"
+        }
+
+        foreach ($Row in $FinalCSV) {
+            $ExportItem = [PSCustomObject]@{
+                Happened                = $Row.Happened.replace("`"","")
+                RuleName                = $Row.RuleName.replace("`"","")
+                Workload                = $Row.Workload.replace("`"","")
+                PolicyName              = $Row.PolicyName.replace("`"","")
+                Sender                  = $Row.Sender.replace("`"","")
+                Subject                 = $Row.Subject.replace("`"","")
+                Receivers               = $Row.Receivers.replace("`"","")
+                UserType                = $Row.UserType.replace("`"","")
+                ClientIP                = $Row.ClientIP.replace("`"","")
+                User                    = $Row.User.replace("`"","")
+                FilePath                = $Row.FilePath.replace("`"","")
+                FileExtension           = $Row.FileExtension.replace("`"","")
+                FileType                = $Row.FileType.replace("`"","")
+                Application             = $Row.Application.replace("`"","")
+                EndPointOperation       = $Row.EndpointOperation.replace("`"","")
+                SourceLocationType      = $Row.SourceLocationType.replace("`"","")
+                DestinationLocationType = $Row.DestinationLocationType.replace("`"","")
+                Platform                = $Row.Platform.replace("`"","")
+                DeviceName              = $Row.DeviceName.replace("`"","")
+                TargetDomain            = $Row.TargetDomain.replace("`"","")
+                TargetFilePath          = $Row.TargetFilePath.replace("`"","")
+                DisplayName             = $null
+                UserEmail               = $null
+                Manager                 = $null
+                Department              = $null
+                EmpID                   = $null
+            }
+
+            $RowUser = $Row.User
+
+            $RetryCount = 0
+            $MaxRetries = 3
+            $Success = $false
+
+            while ($RetryCount -lt $MaxRetries -and -not $Success) {
+                try {
+                    Write-Host "Attempting to fetch user details for UPN $RowUser"
+
+                    $UserDetails = Get-MgUser -UserId $RowUser -Property "displayName,mail,department,employeeId,manager" -ExpandProperty "manager" 2>$null
+
+                    if ($UserDetails) {
+                        $ExportItem.DisplayName = $UserDetails.displayName
+                        $ExportItem.UserEmail = $UserDetails.mail
+                        $ExportItem.Manager = if ($UserDetails.manager) { $UserDetails.manager.displayName } else { "" }
+                        $ExportItem.Department = $UserDetails.department
+                        $ExportItem.EmpID = $UserDetails.employeeId
+                        $Success = $true
+                    } else {
+                        throw "User not found"
+                    }
+                }
+                catch {
+                    Write-Host "User not found or another error occurred for UPN $RowUser" -ForegroundColor Yellow
+                    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Yellow
+
+                    $RetryCount++
+                    Start-Sleep -Seconds 5
+                }
+            }
+
+            if (-not $Success) {
+                $ExportItem.DisplayName = $Row.User
+                $ExportItem.UserEmail = $Row.User
+                $ExportItem.Manager = ""
+                $ExportItem.Department = ""
+                $ExportItem.EmpID = "NULL"
+            }
+
+            # Check for duplicates
+            $isDuplicate = $false
+            foreach ($existingRecord in $existingRecords) {
+                if ($existingRecord.Happened -eq $ExportItem.Happened -and 
+                    $existingRecord.User -eq $ExportItem.User -and 
+                    $existingRecord.RuleName -eq $ExportItem.RuleName -and
+                    $existingRecord.FilePath -eq $ExportItem.FilePath) {
+                    $isDuplicate = $true
+                    Write-Host "Skipping duplicate record: Name=$($ExportItem.User), Happened=$($ExportItem.Happened), Rule Triggered=$($ExportItem.RuleName), File Name=$($ExportItem.FilePath)" -ForegroundColor Yellow
+                    break
+                }
+            }
+
+            if (-not $isDuplicate) {
+                Write-Host "Exporting record: Name=$($ExportItem.User), Happened=$($ExportItem.Happened), Rule Triggered=$($ExportItem.RuleName), File Name=$($ExportItem.FilePath)" -ForegroundColor Green
+                $ExportItem | Export-Csv -Path "C:\DummyPath\OutputFile.csv" -NoTypeInformation -Delimiter "`t" -Append
+                $ExportItem | Export-Csv -Path "C:\DummyPath\CopyDirectory\$CSVName" -NoTypeInformation -Delimiter "`t" -Append
+            }
+        }
+    }
+}
+
+Try {
+    # Initialize start and end times
+    $StartTime = (Get-Date).AddDays(-1).Date
+    $GlobalEndTime = $StartTime.AddDays(1).AddSeconds(-1)
+
+    # Connect to Microsoft Graph
+    Connect-MgGraph -AppId "<Your-App-Id>" -CertificateThumbprint "<Your-Certificate-Thumbprint>" -TenantId "<Your-Tenant-Id>" -NoWelcome
+    Connect-ExchangeOnline -AppId "<Your-App-Id>" -CertificateThumbprint "<Your-Certificate-Thumbprint>" -Organization "<Your-Organization-Name>" -ShowBanner:$False
+    Connect-IPPSSession -AppId "<Your-App-Id>" -CertificateThumbprint "<Your-Certificate-Thumbprint>" -Organization "<Your-Organization-Name>" -ShowBanner:$False
+
+    $Global:IntervalMinutes = 120
+    Get-DLPAuditLog
+    Disconnect-ExchangeOnline -Confirm:$false
+    Disconnect-MgGraph -InformationAction SilentlyContinue
+} Catch {
+    Write-Host "An error occurred on line $($Error[0].InvocationInfo.ScriptLineNumber):"
+    Write-Host $_.Exception.Message
+}
