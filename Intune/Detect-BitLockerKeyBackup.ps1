@@ -19,9 +19,6 @@
     - PowerShell 5.1 or later
     - BitLocker enabled on the system drive
 
-.LINK
-    https://github.com/AnkitG365/Microsoft-Cloud-Security-PowerShell/
-
 .EXAMPLE
     .\Detect-BitLockerKeyBackup.ps1
 
