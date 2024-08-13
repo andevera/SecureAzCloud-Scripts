@@ -1,0 +1,157 @@
+<#
+=============================================================================================
+Name:           Export Microsoft 365 Users' Sign-in Report Using PowerShell 
+Version:        1.0
+Author:         Ankit Gupta
+GitHub:         https://github.com/AnkitG365/SecureAzCloud-Scripts
+Website:        https://secureazcloud.com
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Script Overview and Features:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. Retrieves and exports sign-in logs from Microsoft Entra ID in a user-friendly format.
+2. Enables filtering of successful and failed sign-ins, with the ability to isolate these logs separately.
+3. Supports filtering of interactive and non-interactive sign-in activities.
+4. Provides an option to export logs related to risky sign-ins exclusively.
+5. Monitors guest user sign-ins separately from member sign-ins.
+6. Segments sign-ins based on whether Conditional Access policies were applied or not.
+7. Facilitates the tracking of sign-in outcomes (successes or failures) related to Conditional Access policies.
+8. Allows exporting reports for either 'All users' or specific users based on provided input.
+9. Installs the Microsoft Graph PowerShell module if it isn't already installed.
+10. Fully compatible with accounts that have Multi-Factor Authentication (MFA) enabled.
+11. Exports the report results into a CSV file for further analysis.
+12. Scheduler-friendly, allowing for easy automation and periodic report generation.
+13. Supports certificate-based authentication (CBA) for connecting to Microsoft Graph.
+
+For detailed execution instructions, visit: https://secureazcloud.com
+
+============================================================================================
+#>
+Param
+(
+    [switch]$RiskySignInsOnly,
+    [switch]$GuestUserSignInsOnly,
+    [switch]$Success,
+    [switch]$Failure,
+    [switch]$InteractiveOnly,
+    [switch]$NonInteractiveOnly,
+    [switch]$CAPNotAppliedOnly,
+    [switch]$CAPAppliedOnly,
+    [switch]$CAPSuccessOnly,
+    [switch]$CAPFailedOnly,
+    [string[]]$UserPrincipalName,
+    [string]$TenantId,
+    [string]$ClientId,
+    [string]$CertificateThumbprint
+)
+
+# Ensure the Microsoft Graph PowerShell module is installed
+if (-not (Get-Module -Name microsoft.graph -ListAvailable)) {
+    Write-Host "Installing Microsoft Graph PowerShell module..."
+    Install-Module -Name Microsoft.Graph -Repository PSGallery -Scope CurrentUser -AllowClobber -Force
+}
+
+# Connect to Microsoft Graph
+if ($TenantId -and $ClientId -and $CertificateThumbprint) {
+    Connect-MgGraph -TenantId $TenantId -AppId $ClientId -CertificateThumbprint $CertificateThumbprint -NoWelcome
+} else {
+    Connect-MgGraph -Scopes "AuditLog.Read.All", "Directory.Read.All", "Policy.Read.ConditionalAccess" -NoWelcome
+}
+
+$Location = Get-Location
+$ExportCSV = "$Location\M365Users_Signin_Report_$(Get-Date -Format 'yyyy-MMM-dd_HH-mm-ss').csv"
+$ExportResults = @()
+
+$Count = 0
+$PrintedLogs = 0
+
+# Retrieve sign-in logs
+Write-Host "Generating Microsoft 365 users' sign-in report..."
+Get-MgAuditLogSignIn -All | ForEach-Object {
+    $Count++
+    $UPN = $_.UserPrincipalName
+    Write-Progress -Activity "Processing sign-in record $Count" -Status "UPN: $UPN"
+
+    $CreatedDate = $_.CreatedDateTime
+    $Id = $_.Id
+    $UserDisplayName = $_.UserDisplayName
+    $AuthenticationRequirement = $_.AuthenticationRequirement
+    $Location = "$($_.Location.City), $($_.Location.State), $($_.Location.CountryOrRegion)"
+    $DeviceName = $_.DeviceDetail.DisplayName
+    $Browser = $_.DeviceDetail.Browser
+    $OperatingSystem = $_.DeviceDetail.OperatingSystem
+    $IpAddress = $_.IpAddress
+    $ErrorCode = $_.Status.ErrorCode
+    $FailureReason = $_.Status.FailureReason
+    $UserType = $_.UserType
+    $RiskDetail = $_.RiskDetail
+    $IsInteractive = $_.IsInteractive
+    $RiskState = $_.RiskState
+    $AppDisplayName = $_.AppDisplayName
+    $ResourceDisplayName = $_.ResourceDisplayName
+    $ConditionalAccessStatus = $_.ConditionalAccessStatus
+    $AppliedPolicies = ($_ | Select-Object -ExpandProperty AppliedConditionalAccessPolicies | Where-Object { $_.Result -in @('Success', 'Failed') }).DisplayName -join ", "
+
+    $Status = if ($ErrorCode -eq 0) { 'Success' } else { 'Failed' }
+    $FailureReason = if ($FailureReason -eq 'Other.') { 'None' } else { $FailureReason }
+
+    # Flag to determine if the record should be printed
+    $Print = $true
+
+    # Apply filtering based on user input
+    if ($Success.IsPresent -and $Status -ne 'Success') { $Print = $false }
+    if ($Failure.IsPresent -and $Status -ne 'Failed') { $Print = $false }
+    if ($CAPAppliedOnly.IsPresent -and $ConditionalAccessStatus -eq 'NotApplied') { $Print = $false }
+    if ($CAPNotAppliedOnly.IsPresent -and $ConditionalAccessStatus -ne 'NotApplied') { $Print = $false }
+    if ($CAPFailedOnly.IsPresent -and $ConditionalAccessStatus -ne 'Failed') { $Print = $false }
+    if ($CAPSuccessOnly.IsPresent -and $ConditionalAccessStatus -ne 'Success') { $Print = $false }
+    if ($RiskySignInsOnly.IsPresent -and $RiskDetail -eq 'none') { $Print = $false }
+    if ($GuestUserSignInsOnly.IsPresent -and $UserType -eq 'member') { $Print = $false }
+    if ($UserPrincipalName -and ($UserPrincipalName -notcontains $UPN)) { $Print = $false }
+    if ($InteractiveOnly.IsPresent -and (!$IsInteractive)) { $Print = $false }
+    if ($NonInteractiveOnly.IsPresent -and $IsInteractive) { $Print = $false }
+
+    # Export filtered results to CSV
+    if ($Print) {
+        $PrintedLogs++
+        $ExportResult = [PSCustomObject]@{
+            'Signin Date' = $CreatedDate
+            'User Name' = $UserDisplayName
+            'SigninId' = $Id
+            'UPN' = $UPN
+            'Status' = $Status
+            'IP Address' = $IpAddress
+            'Location' = $Location
+            'Device Name' = $DeviceName
+            'Browser' = $Browser
+            'Operating System' = $OperatingSystem
+            'User Type' = $UserType
+            'Authentication Requirement' = $AuthenticationRequirement
+            'Risk Detail' = $RiskDetail
+            'Risk State' = $RiskState
+            'Conditional Access Status' = $ConditionalAccessStatus
+            'Applied Conditional Access Policies' = if ($AppliedPolicies) { $AppliedPolicies } else { 'None' }
+            'Is Interactive' = $IsInteractive
+        }
+        $ExportResult | Export-Csv -Path $ExportCSV -NoTypeInformation -Append
+    }
+}
+
+# Disconnect Microsoft Graph session
+Disconnect-MgGraph | Out-Null
+
+# Notify user and optionally open the output file
+if (Test-Path -Path $ExportCSV) {
+    Write-Host "`nThe output file is located at:" -NoNewline -ForegroundColor Yellow
+    Write-Host "$ExportCSV" `n
+    Write-Host "The report contains $PrintedLogs sign-in activities." 
+    Write-Host "`n~~ Script prepared by SecureAzCloud ~~`n" -ForegroundColor Green
+    Write-Host "~~ Visit " -NoNewline -ForegroundColor Green; Write-Host "https://secureazcloud.com" -ForegroundColor Yellow -NoNewline; Write-Host " for more information. ~~" -ForegroundColor Green `n`n
+    $Prompt = New-Object -ComObject wscript.shell
+    $UserInput = $Prompt.popup("Do you want to open the output file?", 0, "Open Output File", 4)
+    if ($UserInput -eq 6) {
+        Invoke-Item "$ExportCSV"
+    }
+} else {
+    Write-Host "No logs were found." 
+}
