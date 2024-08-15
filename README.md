@@ -11,7 +11,7 @@ Contributing
 License
 Contact
 Introduction
-This repository contains a wide array of scripts tailored for different needs, ranging from specific Microsoft products like Intune and Entra to more general automation and administrative tasks. Each script is designed with flexibility and scalability in mind, making them suitable for various use cases.
+This repository contains various scripts tailored for different needs, ranging from specific Microsoft products like Intune and Entra to more general automation and administrative tasks. Each script is designed with flexibility and scalability, making it suitable for various use cases.
 
 Prerequisites
 Before using these scripts, ensure you have the following:
@@ -24,7 +24,7 @@ To get started, clone this repository to your local machine: git clone https://g
 Usage: Each script comes with detailed comments and usage instructions. You can execute a script by running the following command in your PowerShell terminal:
 ./<script-name>.ps1
 
-For more specific instructions, refer to the script's header or accompanying documentation.
+Refer to the script's header or accompanying documentation for more specific instructions.
 
 Contributing
 We welcome contributions from the community! If you'd like to contribute:
@@ -42,7 +42,6 @@ Contact
 For any questions or inquiries, feel free to reach out:
 
 Website: [SecureAzCloud](https://secureazcloud.com/)
-Email: ankitgupta_ag@outlook.com
 LinkedIn: Ankit Gupta (https://www.linkedin.com/in/ankytgupta)
 
 
