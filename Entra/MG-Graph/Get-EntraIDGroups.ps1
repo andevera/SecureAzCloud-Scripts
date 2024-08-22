@@ -28,7 +28,9 @@ param (
 )
 
 # Connect using certificate-based authentication
-Connect-MgGraph -ClientId $AppId -TenantId $TenantId -CertificateThumbprint $CertThumbprint -Scopes Group.Read.All
+Connect-MgGraph -ClientId $AppId -TenantId $TenantId -CertificateThumbprint $CertThumbprint -Scopes "Group.Read.All"
 
 # Retrieve all groups
-Get-MgGroup -All | Select-Object DisplayName, GroupTypes, MembershipRule | Format-Table
+$groups = Get-MgGroup -All -ConsistencyLevel eventual -CountVariable Count | Select-Object DisplayName, GroupTypes, MembershipRule
+$groups | Format-Table
+Write-Output "Total groups retrieved: $Count"
