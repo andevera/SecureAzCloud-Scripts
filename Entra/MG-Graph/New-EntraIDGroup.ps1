@@ -40,8 +40,8 @@ param (
 )
 
 # Connect using certificate-based authentication
-Connect-MgGraph -ClientId $AppId -TenantId $TenantId -CertificateThumbprint $CertThumbprint -Scopes Group.ReadWrite.All
+Connect-MgGraph -ClientId $AppId -TenantId $TenantId -CertificateThumbprint $CertThumbprint -Scopes "Group.ReadWrite.All"
 
 # Create a new group
-New-MgGroup -DisplayName $DisplayName -Description $Description -MailEnabled $false -SecurityEnabled $true -MailNickname $DisplayName.Replace(" ", "")
+New-MgGroup -DisplayName $DisplayName -Description $Description -MailEnabled:$false -SecurityEnabled:$true -MailNickname $DisplayName.Replace(" ", "")
 Write-Output "Group '$DisplayName' created successfully."
