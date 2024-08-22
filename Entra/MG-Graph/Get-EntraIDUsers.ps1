@@ -28,7 +28,9 @@ param (
 )
 
 # Connect using certificate-based authentication
-Connect-MgGraph -ClientId $AppId -TenantId $TenantId -CertificateThumbprint $CertThumbprint -Scopes User.Read.All
+Connect-MgGraph -ClientId $AppId -TenantId $TenantId -CertificateThumbprint $CertThumbprint -Scopes "User.Read.All"
 
 # Retrieve all users
-Get-MgUser -All | Select-Object DisplayName, UserPrincipalName, AccountEnabled | Format-Table
+$users = Get-MgUser -All -ConsistencyLevel eventual -CountVariable Count | Select-Object DisplayName, UserPrincipalName, AccountEnabled
+$users | Format-Table
+Write-Output "Total users retrieved: $Count"
