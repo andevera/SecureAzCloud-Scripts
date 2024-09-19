@@ -2,15 +2,6 @@
 
 Welcome to the **SecureAzCloud** repository, home to a diverse collection of automation scripts developed for Microsoft Intune, Entra ID, and various other related and generic products. These scripts are crafted to simplify complex tasks, enhance security, and improve administrative efficiency across multiple environments.
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Script Categories](#script-categories)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ## Introduction
 
