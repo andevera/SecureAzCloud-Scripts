@@ -1,0 +1,27 @@
+// Define a function to extract relevant network exposure details
+let extractNetworkInfo = (){
+    DeviceInfo
+    | where Timestamp > ago(30d)
+    | extend ParsedFields = todynamic(AdditionalFields)
+    | extend LastSeenPublicExposure = todatetime(ParsedFields.InternetFacingLastSeen)
+        , ExposureReason = tostring(ParsedFields.InternetFacingReason)
+        , LocalPrivateIP = tostring(ParsedFields.InternetFacingLocalIp)
+        , ScannedPublicIP = tostring(ParsedFields.InternetFacingPublicScannedIp)
+        , PrivatePort = tostring(ParsedFields.InternetFacingLocalPort)
+        , ScannedPublicPort = tostring(ParsedFields.InternetFacingPublicScannedPort)
+        , TransportLayerProtocol = tostring(ParsedFields.InternetFacingTransportProtocol)
+};
+extractNetworkInfo()
+// Retrieve the most recent record
+| summarize arg_max(LastSeenPublicExposure, *) by DeviceName, LocalPrivateIP, PrivatePort, TransportLayerProtocol
+// Join with the earliest observed record
+| join kind=inner ( extractNetworkInfo()
+    | summarize arg_min(LastSeenPublicExposure, *) by DeviceName, LocalPrivateIP, PrivatePort, TransportLayerProtocol
+) on DeviceName, LocalPrivateIP, PrivatePort, TransportLayerProtocol
+// Generate data points for each day between the first and last observation
+| extend DateRange = range(bin(LastSeenPublicExposure1, 1d), bin(LastSeenPublicExposure, 1d), 1d)
+// Expand data points to show port activity over time
+| mv-expand DateRange
+| where DateRange != ""
+| summarize TotalOccurrences = count() by PrivatePort, bin(todatetime(DateRange), 1d)
+| render linechart
