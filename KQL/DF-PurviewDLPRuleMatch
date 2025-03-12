@@ -1,0 +1,97 @@
+CloudAppEvents
+| where Timestamp >= now(-30d)
+| where ActionType contains "DLPRuleMatch"
+| extend d=parse_json(RawEventData) 
+| extend Workload=d.Workload
+| extend AlertID=d.ObjectId
+| extend ExchangeDataRaw=d.ExchangeMetaData
+| extend ExchangePolicyDetails=d.PolicyDetails
+| extend EXODataDetailed=parse_json(ExchangeDataRaw)
+| extend EXOPolicyDetails=parse_json(ExchangePolicyDetails)
+| extend Service = tostring(Workload)
+| where Service contains "exchange"
+| extend Subject=EXODataDetailed.Subject
+| extend FileSize=EXODataDetailed.FileSize
+| extend FromField=EXODataDetailed.From
+| extend ToField=EXODataDetailed.To
+| extend CCField=EXODataDetailed.CC
+| extend BCCField=EXODataDetailed.BCC
+| extend RecipientCount=EXODataDetailed.RecipientCount
+| extend PolicyName=EXOPolicyDetails[0].PolicyName
+| extend RuleName=EXOPolicyDetails[0].Rules[0].RuleName
+| extend Severity=EXOPolicyDetails[0].Rules[0].Severity
+| extend SensitiveInformationTypeName1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].SensitiveInformationTypeName
+| extend SensitiveTypeSource1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].SensitiveTypeSource
+| extend UniqueCount1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].UniqueCount
+| extend Count1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].Count
+| extend Confidence1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].Confidence
+| extend Location1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].Location
+| extend ClassifierType1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].ClassifierType
+| extend SITLowConfidenceCount1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].SensitiveInformationDetailedClassificationAttributes[0].Count
+| extend SITMidConfidenceCount1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].SensitiveInformationDetailedClassificationAttributes[1].Count
+| extend SITHighConfidenceCount1=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[0].SensitiveInformationDetailedClassificationAttributes[2].Count
+| extend SensitiveInformationTypeName2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].SensitiveInformationTypeName
+| extend SensitiveTypeSource2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].SensitiveTypeSource
+| extend UniqueCount2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].UniqueCount
+| extend Count2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].Count
+| extend Confidence2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].Confidence
+| extend Location2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].Location
+| extend ClassifierType2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].ClassifierType
+| extend SITLowConfidenceCount2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].SensitiveInformationDetailedClassificationAttributes[0].Count
+| extend SITMidConfidenceCount2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].SensitiveInformationDetailedClassificationAttributes[1].Count
+| extend SITHighConfidenceCount2=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[1].SensitiveInformationDetailedClassificationAttributes[2].Count
+| extend SensitiveInformationTypeName3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].SensitiveInformationTypeName
+| extend SensitiveTypeSource3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].SensitiveTypeSource
+| extend UniqueCount3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].UniqueCount
+| extend Count3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].Count
+| extend Confidence3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].Confidence
+| extend Location3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].Location
+| extend ClassifierType3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].ClassifierType
+| extend SITLowConfidenceCount3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].SensitiveInformationDetailedClassificationAttributes[0].Count
+| extend SITMidConfidenceCount3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].SensitiveInformationDetailedClassificationAttributes[1].Count
+| extend SITHighConfidenceCount3=EXOPolicyDetails[0].Rules[0].ConditionsMatched.SensitiveInformation[2].SensitiveInformationDetailedClassificationAttributes[2].Count
+| project
+    Timestamp,
+    Application,
+    AlertID,
+    AccountType,
+    PolicyName,
+    RuleName,
+    Severity,
+    Subject,
+    FromField,
+    RecipientCount,
+    ToField,
+    CCField,
+    BCCField,
+    FileSize,
+    SensitiveInformationTypeName1,
+    SensitiveTypeSource1,
+    ClassifierType1,
+    Count1,
+    UniqueCount1,
+    Confidence1,
+    Location1,
+    SITLowConfidenceCount1,
+    SITMidConfidenceCount1,
+    SITHighConfidenceCount1,
+    SensitiveInformationTypeName2,
+    SensitiveTypeSource2,
+    ClassifierType2,
+    Count2,
+    UniqueCount2,
+    Confidence2,
+    Location2,
+    SITLowConfidenceCount2,
+    SITMidConfidenceCount2,
+    SITHighConfidenceCount2,
+    SensitiveInformationTypeName3,
+    SensitiveTypeSource3,
+    ClassifierType3,
+    Count3,
+    UniqueCount3,
+    Confidence3,
+    Location3,
+    SITLowConfidenceCount3,
+    SITMidConfidenceCount3,
+    SITHighConfidenceCount3
