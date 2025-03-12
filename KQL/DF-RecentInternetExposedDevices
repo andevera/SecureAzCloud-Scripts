@@ -1,0 +1,14 @@
+// Extract details of recently exposed network devices
+DeviceInfo
+| where Timestamp > ago(7d)  // Filter for the last 7 days
+| extend ParsedFields = todynamic(AdditionalFields)
+| where todatetime(ParsedFields.InternetFacingLastSeen) > ago(7d)
+| extend LastSeenExposure = tostring(ParsedFields.InternetFacingLastSeen)  // Keeping original field name in parsing
+    , ExposureReason = tostring(ParsedFields.InternetFacingReason)
+    , LocalInternalIP = tostring(ParsedFields.InternetFacingLocalIp)
+    , PublicScannedIP = tostring(ParsedFields.InternetFacingPublicScannedIp)
+    , InternalPort = tostring(ParsedFields.InternetFacingLocalPort)
+    , ExternalScannedPort = tostring(ParsedFields.InternetFacingPublicScannedPort)
+    , NetworkProtocol = tostring(ParsedFields.InternetFacingTransportProtocol)
+| summarize arg_max(LastSeenExposure, *) by DeviceName, LocalInternalIP, InternalPort, PublicScannedIP, ExternalScannedPort, NetworkProtocol, ExposureReason
+| project LastSeenExposure, DeviceName, LocalInternalIP, InternalPort, PublicScannedIP, ExternalScannedPort, NetworkProtocol, ExposureReason
