@@ -3,3 +3,4 @@ DeviceProcessEvents
 | where FileName in ("cipher.exe","sdelete.exe") 
       and (ProcessCommandLine has "/w" or ProcessCommandLine has "/q")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 

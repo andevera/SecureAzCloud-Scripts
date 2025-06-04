@@ -3,3 +3,4 @@ EmailEvents
 | where RecipientEmailAddress endswith "@gmail.com" or endswith "@yahoo.com"
       and Size > 10485760
 | project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject, Size
+ 

@@ -3,3 +3,4 @@ DeviceEvents
 | where ActionType == "DeviceConnect"
 | where AdditionalFields has "HostDrivePath"
 | project Timestamp, DeviceName, AdditionalFields
+ 

@@ -2,3 +2,4 @@ DeviceProcessEvents
 | where Timestamp >= ago(14d)
 | where FileName == "psexec.exe"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 

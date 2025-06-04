@@ -4,3 +4,4 @@ DeviceNetworkEvents
       and BytesSent > 100000000  // >100MB
 | where RemoteIPCountry != "YourCountry" 
 | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort, BytesSent
+ 

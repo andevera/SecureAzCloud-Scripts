@@ -4,3 +4,4 @@ DeviceRegistryEvents
       and RegistryValueName in ("DisableAntiSpyware","DisableRealtimeMonitoring")
       and RegistryValueData == "1"
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName
+ 

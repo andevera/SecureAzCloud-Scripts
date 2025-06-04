@@ -3,3 +3,4 @@ DeviceProcessEvents
 | where FileName in ("net.exe","net1.exe")
       and ProcessCommandLine hasregex @"(?i)net user /domain"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 

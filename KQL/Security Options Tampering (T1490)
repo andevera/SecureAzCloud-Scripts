@@ -4,3 +4,4 @@ DeviceRegistryEvents
       and RegistryValueName == "CrashOnAuditFail" 
       and RegistryValueData == "1"
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName
+ 

@@ -3,3 +3,4 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in ("procdump.exe","rundll32.exe","mimikatz.exe")
       and ProcessCommandLine contains "lsass"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 

@@ -3,3 +3,4 @@ DeviceProcessEvents
 | where FileName in ("word.exe","excel.exe","acrobat.exe","OneNote.exe")
       and ProcessCommandLine contains "SharePoint" 
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 

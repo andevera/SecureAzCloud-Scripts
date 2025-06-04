@@ -1,3 +1,4 @@
 SecurityEvent
 | where EventID == 1074 or EventID == 6006
 | project TimeGenerated, Computer, UserName, EventID
+ 

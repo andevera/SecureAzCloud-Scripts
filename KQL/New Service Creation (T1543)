@@ -2,3 +2,4 @@ DeviceEvents
 | where Timestamp >= ago(30d)
 | where ActionType == "CreateService"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, AdditionalFields
+ 

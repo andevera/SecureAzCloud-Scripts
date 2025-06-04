@@ -4,3 +4,4 @@ DeviceFileEvents
       and (FileName endswith ".locked" or FileName endswith ".encrypted" or FileName endswith ".crypt")
 | summarize count() by DeviceName, FolderPath
 | where count_ > 20
+ 

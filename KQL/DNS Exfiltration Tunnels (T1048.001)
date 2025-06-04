@@ -3,3 +3,4 @@ DeviceNetworkEvents
 | where Protocol == "DNS"
       and (PayloadSize > 200 or QueryName has ".exe")
 | project Timestamp, DeviceName, QueryName, PayloadSize, RemoteIP
+ 

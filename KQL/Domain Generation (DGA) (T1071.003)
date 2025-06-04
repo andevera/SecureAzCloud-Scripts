@@ -4,3 +4,4 @@ DeviceNetworkEvents
 | summarize recent = make_list(QueryName, 50) by DeviceName, bin(Timestamp, 1h)
 | where any_of(recent, q -> q matches regex @"^[a-z0-9]{8,}\.(com|net)$")
 | project DeviceName, Timestamp, recent
+ 

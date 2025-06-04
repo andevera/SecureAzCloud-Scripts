@@ -3,3 +3,4 @@ DeviceProcessEvents
 | where FileName == "WmiPrvSE.exe"
       and (ProcessCommandLine contains "EventFilter" or ProcessCommandLine contains "EventConsumer")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 

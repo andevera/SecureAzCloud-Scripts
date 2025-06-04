@@ -2,3 +2,4 @@ SecurityEvent
 | where EventID == 4769 and TicketEncryptionType == "rc4_hmac"
       and ServiceName contains "@YOURDOMAIN.COM"
 | project TimeGenerated, Computer, Account, ServiceName
+ 

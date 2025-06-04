@@ -1,3 +1,4 @@
 SecurityEvent
 | where EventID == 1102 and TimeGenerated >= ago(1d)
 | project TimeGenerated, Computer, SubjectAccount
+ 

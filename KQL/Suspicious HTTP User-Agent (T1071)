@@ -3,3 +3,4 @@ DeviceNetworkEvents
 | where HttpUserAgent != "" 
       and (HttpUserAgent has "python" or HttpUserAgent has "curl" or HttpUserAgent has "HttpClient")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, HttpUserAgent, RemoteIP
+ 

@@ -3,3 +3,4 @@ DeviceLogonEvents
 | where AccountType == "User"
 | where DeviceName contains "DC"
 | project Timestamp, DeviceName, Account, LogonType
+ 

@@ -4,3 +4,4 @@ DeviceNetworkEvents
 | where RemoteIPType == "Internal"
 | summarize count() by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1h)
 | where count_ > 10
+ 
