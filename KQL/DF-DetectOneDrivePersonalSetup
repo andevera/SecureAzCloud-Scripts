@@ -1,0 +1,2 @@
+DeviceProcessEvents
+| where ProcessCommandLine has @"OneDrive.exe"" /client=Personal /hideWelcomePage /email:"
