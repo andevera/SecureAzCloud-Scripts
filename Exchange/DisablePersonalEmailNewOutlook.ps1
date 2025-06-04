@@ -10,3 +10,4 @@ Set-CASMailbox -Identity user@domain.com -OwaMailboxPolicy "NoPersonalAccountsPo
 
 #Verify
 Get-OwaMailboxPolicy -Identity "OwaMailboxPolicy-Default" | Format-List Name,PersonalAccountsEnabled
+ 

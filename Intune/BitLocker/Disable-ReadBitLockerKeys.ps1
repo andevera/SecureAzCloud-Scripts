@@ -20,4 +20,4 @@ Invoke-MgGraphRequest -Uri $authPolicyUri -Method PATCH -Body $body
 # Retrieve and display the current authorization policy settings to verify the change
 $authPolicy = Invoke-MgGraphRequest -Uri $authPolicyUri
 $authPolicy.defaultUserRolePermissions
- 
+  
