@@ -1,5 +1,4 @@
 DeviceProcessEvents
 | where Timestamp >= ago(14d)
-| where InitiatingProcessFileName in ("wmic.exe","wmiprvse.exe")
-      and ProcessCommandLine has_any ("call create", "EXECUTE")
+| where FileName == "psexec.exe"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine

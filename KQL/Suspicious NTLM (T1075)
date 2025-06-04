@@ -1,0 +1,6 @@
+DeviceLogonEvents
+| where Timestamp >= ago(14d)
+| where LogonType in (3, 10)  // network or remote
+      and AccountType == "Machine"
+      and SubjectAccount != Account
+| project Timestamp, DeviceName, Account, SubjectAccount

@@ -1,0 +1,6 @@
+DeviceRegistryEvents
+| where Timestamp >= ago(7d)
+| where RegistryKey has @"\System\CurrentControlSet\Control\Lsa"
+      and RegistryValueName == "CrashOnAuditFail" 
+      and RegistryValueData == "1"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName

@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID == 7045 or EventID == 4698
+| where SubjectAccount != "" 
+| project TimeGenerated, Computer, SubjectAccount, NewServiceName

@@ -1,0 +1,6 @@
+DeviceNetworkEvents
+| where Timestamp >= ago(7d)
+| where (RemotePort == 21 or RemotePort == 22 or RemotePort == 80 or RemotePort == 443)
+      and BytesSent > 100000000  // >100MB
+| where RemoteIPCountry != "YourCountry" 
+| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort, BytesSent

@@ -1,0 +1,5 @@
+DeviceLogonEvents
+| where LogonType == 10  // RemoteInteractive
+| where AccountType == "User"
+| where DeviceName contains "DC"
+| project Timestamp, DeviceName, Account, LogonType

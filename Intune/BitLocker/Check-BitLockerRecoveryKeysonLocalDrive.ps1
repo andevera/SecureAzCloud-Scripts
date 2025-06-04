@@ -19,7 +19,7 @@
     - PowerShell 5.1 or later
     - BitLocker enabled on the system drive
 
-.EXAMPLE
+.EXAMPLE 
     .\Detect-BitLockerKeyBackup.ps1
 
     This example runs the script to detect BitLocker recovery key backup events for the system drive.

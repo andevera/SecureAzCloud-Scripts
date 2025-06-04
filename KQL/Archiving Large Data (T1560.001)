@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where Timestamp >= ago(7d)
+| where FileName in ("7z.exe","tar.exe","powershell.exe")
+      and (ProcessCommandLine contains "Compress-Archive" or ProcessCommandLine contains "7z a")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine

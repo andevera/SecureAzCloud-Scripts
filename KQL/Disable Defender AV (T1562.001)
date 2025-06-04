@@ -1,0 +1,6 @@
+DeviceRegistryEvents
+| where Timestamp >= ago(7d)
+| where RegistryKey contains @"\Windows Defender"
+      and RegistryValueName in ("DisableAntiSpyware","DisableRealtimeMonitoring")
+      and RegistryValueData == "1"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName

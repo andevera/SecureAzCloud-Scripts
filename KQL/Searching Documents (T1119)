@@ -1,5 +1,5 @@
 DeviceProcessEvents
 | where Timestamp >= ago(14d)
-| where InitiatingProcessFileName in ("wmic.exe","wmiprvse.exe")
-      and ProcessCommandLine has_any ("call create", "EXECUTE")
+| where FileName in ("word.exe","excel.exe","acrobat.exe","OneNote.exe")
+      and ProcessCommandLine contains "SharePoint" 
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine

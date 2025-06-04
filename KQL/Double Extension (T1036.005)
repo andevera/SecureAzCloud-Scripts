@@ -1,0 +1,4 @@
+DeviceFileEvents
+| where Timestamp >= ago(30d)
+| where FileName matches regex @".*\.(txt|jpg|png)\.exe$"
+| project Timestamp, DeviceName, FolderPath, FileName

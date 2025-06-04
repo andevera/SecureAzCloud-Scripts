@@ -1,0 +1,5 @@
+EmailEvents
+| where Timestamp >= ago(7d)
+| where RecipientEmailAddress endswith "@gmail.com" or endswith "@yahoo.com"
+      and Size > 10485760
+| project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject, Size

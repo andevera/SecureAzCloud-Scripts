@@ -1,0 +1,5 @@
+DeviceNetworkEvents
+| where Timestamp >= ago(7d)
+| where HttpUserAgent != "" 
+      and (HttpUserAgent has "python" or HttpUserAgent has "curl" or HttpUserAgent has "HttpClient")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, HttpUserAgent, RemoteIP

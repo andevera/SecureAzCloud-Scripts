@@ -1,0 +1,4 @@
+DeviceProcessEvents
+| where Timestamp >= ago(7d)
+| where FileName in ("sc.exe","PowerShell.exe") and ProcessCommandLine has "WakeOnLAN"
+| project Timestamp, DeviceName, ProcessCommandLine

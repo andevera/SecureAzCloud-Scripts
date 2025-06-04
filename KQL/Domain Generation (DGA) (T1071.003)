@@ -1,0 +1,6 @@
+DeviceNetworkEvents
+| where Timestamp >= ago(30d)
+| where Protocol == "DNS" and QueryType == "A"
+| summarize recent = make_list(QueryName, 50) by DeviceName, bin(Timestamp, 1h)
+| where any_of(recent, q -> q matches regex @"^[a-z0-9]{8,}\.(com|net)$")
+| project DeviceName, Timestamp, recent

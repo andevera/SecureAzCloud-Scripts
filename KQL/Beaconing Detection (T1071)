@@ -1,0 +1,5 @@
+DeviceNetworkEvents
+| where Timestamp >= ago(1d)
+| summarize uniqueIPs = dcount(RemoteIP) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1h)
+| where uniqueIPs > 5
+| project DeviceName, InitiatingProcessAccountName, Timestamp

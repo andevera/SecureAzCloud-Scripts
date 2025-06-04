@@ -1,0 +1,4 @@
+DeviceLogonEvents
+| where Timestamp >= ago(7d)
+| where LogonType == 9  // NewCredentials
+| project Timestamp, DeviceName, Account, AuthenticationPackage

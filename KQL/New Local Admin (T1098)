@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID in (4732, 4733, 4735) 
+      and GroupName == "Administrators"
+| project TimeGenerated, Computer, SubjectAccount, Account

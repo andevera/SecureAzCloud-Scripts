@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where Timestamp >= ago(7d)
+| where FileName == "powershell.exe"
+      and ProcessCommandLine has_any ("Get-ADUser","Get-ADComputer","Get-ADGroup")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine

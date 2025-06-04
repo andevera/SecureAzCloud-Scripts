@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where Timestamp >= ago(7d)
+| where FileName in ("systeminfo.exe","cmd.exe")
+      and ProcessCommandLine contains "systeminfo"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
