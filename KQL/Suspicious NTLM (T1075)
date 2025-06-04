@@ -4,3 +4,4 @@ DeviceLogonEvents
       and AccountType == "Machine"
       and SubjectAccount != Account
 | project Timestamp, DeviceName, Account, SubjectAccount
+ 

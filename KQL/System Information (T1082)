@@ -3,3 +3,4 @@ DeviceProcessEvents
 | where FileName in ("systeminfo.exe","cmd.exe")
       and ProcessCommandLine contains "systeminfo"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine
+ 
