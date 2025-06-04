@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where Timestamp >= ago(14d)
+| where FileName == "regsvr32.exe"
+      and ProcessCommandLine has "/i:http"
+| project Timestamp, DeviceName, ProcessCommandLine

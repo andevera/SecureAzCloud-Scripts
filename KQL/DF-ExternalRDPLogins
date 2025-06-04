@@ -1,0 +1,5 @@
+CommonSecurityLog
+| where DeviceVendor == "Windows" and ApplicationProtocol == "RDP"
+| where RemoteIPCountry !in ("YourCountry")  // focus on outside your region
+| summarize count() by DeviceIP, DestinationIP, bin(TimeGenerated, 1h)
+| where count_ > 5

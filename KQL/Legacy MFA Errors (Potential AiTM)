@@ -1,0 +1,5 @@
+IdentityLogonEvents
+| where Timestamp >= ago(30d)
+| where Status != "Success"
+      and (StatusReason contains "50074" or StatusReason contains "50140")
+| project TimeGenerated, UserPrincipalName, ClientAppUsed, Status, StatusReason

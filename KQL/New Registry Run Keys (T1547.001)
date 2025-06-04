@@ -1,0 +1,6 @@
+DeviceRegistryEvents
+| where Timestamp >= ago(30d)
+| where RegistryKey contains @"\Windows\CurrentVersion\Run" 
+      or RegistryKey contains @"\Windows\CurrentVersion\RunOnce"
+| where RegistryValueData contains ".exe"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName

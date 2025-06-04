@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where Timestamp >= ago(14d)
+| where ProcessCommandLine contains "\\\\" and ProcessCommandLine contains ".exe"
+| where InitiatingProcessFileName !in ("net.exe","explorer.exe") 
+| project Timestamp, DeviceName, ProcessCommandLine

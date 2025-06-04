@@ -1,0 +1,5 @@
+EmailAttachmentInfo
+| where Timestamp >= ago(7d)
+| where FileName endswith ".lnk" or FileName endswith ".iso" or FileName endswith ".exe"
+| where SenderFromAddress !startswith "trusted@yourdomain.com"
+| project Timestamp, RecipientEmailAddress, SenderFromAddress, FileName, SHA256

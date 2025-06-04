@@ -1,0 +1,5 @@
+DeviceEvents
+| where Timestamp >= ago(30d)
+| where ActionType == "DeviceConnect"
+| where AdditionalFields has "HostDrivePath"
+| project Timestamp, DeviceName, AdditionalFields

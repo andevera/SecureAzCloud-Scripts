@@ -1,0 +1,4 @@
+DeviceEvents
+| where Timestamp >= ago(14d)
+| where ActionType in ("CreateScheduledTask","UpdateScheduledTask")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, AdditionalFields

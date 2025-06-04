@@ -1,0 +1,7 @@
+DeviceNetworkEvents
+| where Timestamp >= ago(14d) and RemoteUrl contains ".js"
+| where InitiatingProcessFileName in ("chrome.exe","firefox.exe","msedge.exe")
+      and ProcessCommandLine contains "http"
+| extend Domain = extract(@"https?://([^/]+)/", 1, RemoteUrl)
+| where Domain in ("malicious-site.com", "badactor.example")
+| project Timestamp, DeviceName, InitiatingProcessCommandLine, RemoteUrl
