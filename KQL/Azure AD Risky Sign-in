@@ -1,0 +1,3 @@
+SigninLogs
+| where RiskLevelDuringSignIn == "high" or RiskDetail contains "high"
+| project TimeGenerated, UserPrincipalName, IPAddress, RiskDetail, RiskLevelDuringSignIn

@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "kube-audit"
+| where Log_s contains "\"resource\":\"clusterrolebindings\"" and Log_s contains "\"cluster-admin\""
+| where Log_s contains "\"verb\":\"create\""

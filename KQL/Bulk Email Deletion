@@ -1,0 +1,4 @@
+OfficeActivity
+| where ActivityDisplayName in ("Move to Deleted Items", "SoftDelete", "HardDelete")
+| summarize Deletes=count() by UserId, bin(TimeGenerated, 1h)
+| where Deletes > 100

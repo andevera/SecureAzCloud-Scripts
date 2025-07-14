@@ -1,0 +1,4 @@
+OfficeActivity
+| where ActivityDisplayName == "Add-MailboxPermission" or ActivityDisplayName == "UpdateMailboxPermissions"
+| where Parameters has "SendAs" or Parameters has "FullAccess"
+| project TimeGenerated, TargetMailbox=Target, GrantedTo=tostring(parse_json(Parameters).User)

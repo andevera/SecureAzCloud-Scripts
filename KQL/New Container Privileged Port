@@ -1,0 +1,4 @@
+DeviceNetworkEvents
+| where OSPlatform == "Linux" and LocalPort < 1024 and ProcessName contains "container"
+| summarize count() by LocalPort, Image = tostring(parse_json(AdditionalFields).ImageName)
+| where count_ > 0

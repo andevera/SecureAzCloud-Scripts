@@ -1,0 +1,3 @@
+AuditLogs
+| where OperationName == "Invite external user"
+| project TimeGenerated, InvitedUser=tostring(TargetResources[0].displayName), Inviter=tostring(InitiatedBy.user.userPrincipalName)

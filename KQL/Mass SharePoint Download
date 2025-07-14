@@ -1,0 +1,4 @@
+OfficeActivity 
+| where ActivityDisplayName == "FileDownloaded"
+| summarize Downloads=count() by UserId, bin(TimeGenerated, 1h)
+| where Downloads > 500

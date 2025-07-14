@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "kube-audit"
+| where Log_s contains "\"privileged\": true"
+| project TimeGenerated, Log_s // Pod creation JSON indicating privileged container

@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where DeviceName contains "build-agent"
+| where FileName == "powershell.exe" and ProcessCommandLine has "IEX"

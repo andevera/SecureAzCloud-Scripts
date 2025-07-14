@@ -1,0 +1,2 @@
+CommonSecurityLog
+| where DestinationHostname contains "openai.com" and toint(RequestBodySize) > 1000000

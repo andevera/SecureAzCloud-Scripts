@@ -1,0 +1,4 @@
+DeviceNetworkEvents
+| where ProcessName has_any("npm", "pip", "mvn", "nuget")
+| where RemoteUrl contains ".amazonaws.com" or RemoteUrl contains "npmjs.com"
+| where RemoteUrl has "://registry."  // external registry usage

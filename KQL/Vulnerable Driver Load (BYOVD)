@@ -1,0 +1,3 @@
+SecurityEvent
+| where EventID == 6 and (FileName has "sys" or Message has_any("Loaded driver", "Service installed"))
+| where Message has_any("Mhyprot2.sys","WinIo","RTCore64.sys","Driver")

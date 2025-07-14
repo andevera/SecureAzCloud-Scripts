@@ -1,0 +1,3 @@
+SigninLogs
+| summarize ips=make_set(IPAddress), Locations=make_set(LocationDetails.countryOrRegion) by CorrelationId, UserPrincipalName, bin(TimeGenerated, 1h)
+| where array_length(ips) > 1

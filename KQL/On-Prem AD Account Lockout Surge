@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID == 4740  // account lockout
+| summarize LockedAccounts=dcount(TargetUserName) by bin(TimeGenerated, 5m)
+| where LockedAccounts > 10

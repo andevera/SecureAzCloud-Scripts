@@ -1,0 +1,4 @@
+AzureActivity
+| where OperationName has "virtualMachines/start" or OperationName has "virtualMachines/deallocate"
+| summarize Count=count() by Caller, bin(TimeGenerated, 30m)
+| where Count > 10

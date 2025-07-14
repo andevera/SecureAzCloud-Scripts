@@ -1,0 +1,4 @@
+DnsEvents
+| where QueryType == "TXT"
+| summarize TXTCount=count() by ClientIP, bin(TimeGenerated, 1h)
+| where TXTCount > 100

@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where ParentProcessName == "onenote.exe"
+| where FileName in~("cmd.exe","powershell.exe","cscript.exe","wscript.exe")

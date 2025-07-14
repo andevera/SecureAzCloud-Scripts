@@ -1,0 +1,4 @@
+OfficeActivity
+| where ActivityDisplayName == "UserReportedMessage"
+| summarize Reports=count() by MessageId = tostring(Parameters.MessageId), Subject=tostring(Parameters.Subject)
+| where Reports > 3

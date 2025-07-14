@@ -1,0 +1,4 @@
+NetworkTraffic
+| where Protocol == "ICMP" and Direction == "Outbound"
+| summarize avg(PacketSize) by DeviceName, bin(TimeGenerated, 1m)
+| where avg_PacketSize > 500

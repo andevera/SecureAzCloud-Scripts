@@ -1,0 +1,4 @@
+SigninLogs
+| where ConditionalAccessStatus =~ "MfaRequired" and ResultType != 0
+| summarize MFA_Attempts=count() by UserPrincipalName, bin(TimeGenerated, 5m)
+| where MFA_Attempts >= 5

@@ -1,0 +1,3 @@
+OfficeActivity
+| where ActivityDisplayName == "New-InboxRule" and Parameters has "ForwardTo"
+| project TimeGenerated, UserId, ForwardTo=parse_json(Parameters).ForwardTo

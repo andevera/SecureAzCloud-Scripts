@@ -1,0 +1,3 @@
+AuditLogs
+| where OperationName == "Consent to application"
+| project TimeGenerated, InitiatedByUser = tostring(InitiatedBy.user.userPrincipalName), ApplicationName=tostring(TargetResources[0].displayName), Permissions=tostring(TargetResources[0].modifiedProperties[0].newValue)

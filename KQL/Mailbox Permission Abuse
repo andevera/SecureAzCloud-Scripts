@@ -1,0 +1,5 @@
+OfficeActivity
+| where ActivityDisplayName == "New-InboxRule" and Parameters has "ForwardTo"
+| parse Parameters with * "ForwardTo=" fwd:string ";" 
+| summarize Mailboxes=count() by ForwardAddress=fwd
+| where Mailboxes > 1

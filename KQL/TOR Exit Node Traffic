@@ -1,0 +1,3 @@
+CommonSecurityLog
+| where DestinationIP in (ThreatIntelligenceIndicator | where Description contains "Tor Exit" | distinct NetworkIP) 
+| project TimeGenerated, SourceIP, DestinationIP, DestinationPort

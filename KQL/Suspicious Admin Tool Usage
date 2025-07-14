@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where OSPlatform == "Linux"
+| where FileName in~("nmap","masscan","netcat","nc","sqlmap")

@@ -1,0 +1,3 @@
+EmailEvents
+| where SenderFromDomain == "yourcompany.com" and RecipientAddress !endswith "@yourcompany.com"
+| where TotalAttachmentSize > 10mb

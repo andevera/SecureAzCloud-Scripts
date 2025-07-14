@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "StorageLogging" and OperationName == "GetBlob"
+| where tostring(parse_json(RequestURI).filePath) has ".pb" or RequestURI has ".onnx"
+| where AccountKeyName != "ds-team-key"  // example: filter if not using expected key

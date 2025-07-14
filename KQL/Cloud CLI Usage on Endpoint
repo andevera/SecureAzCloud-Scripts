@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where FileName in~("az.exe","aws.exe","gcloud.exe")
+| where AccountDomain !has "svc"  // exclude service accounts if any

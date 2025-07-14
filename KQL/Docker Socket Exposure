@@ -1,0 +1,4 @@
+CommonSecurityLog
+| where DestinationPort == 2375 or DestinationPort == 2376
+| where Action == "Allowed"
+| project TimeGenerated, SourceIP, DestinationIP, DestinationPort

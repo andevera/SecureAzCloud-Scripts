@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "kube-audit"
+| where Log_s contains "\"image\": \"docker.io" or Log_s contains "\"image\": \"public.ecr.aws"
+| project TimeGenerated, Image=parse_json(Log_s).requestObject.spec.containers[0].image

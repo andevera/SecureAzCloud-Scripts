@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "AppServiceHTTPLogs" and Resource contains "YOUR-ML-API"
+| summarize Requests=count() by ClientIP, bin(TimeGenerated, 1h)
+| where Requests > 1000

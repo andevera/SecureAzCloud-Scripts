@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category startswith "kube-audit"
+| where Log_s contains "image" and Log_s matches regex @".*(miner|cryptomin|kdevtmpfsi).*"
+| project TimeGenerated, parse_json(Log_s).requestObject.spec.containers[0].image

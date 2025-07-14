@@ -1,0 +1,2 @@
+DeviceProcessEvents
+| where FileName == "powershell.exe" and ProcessCommandLine has "api.openai.com"

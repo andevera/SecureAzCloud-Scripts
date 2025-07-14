@@ -1,0 +1,4 @@
+GitHubAudit
+| where Action has "token.auth" or Action == "git.clone"
+| summarize IPs=make_set(SourceIP) by Token=AuthenticationTokenId
+| where array_length(IPs) > 1

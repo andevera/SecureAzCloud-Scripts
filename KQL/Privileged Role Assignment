@@ -1,0 +1,4 @@
+AuditLogs
+| where OperationName == "Add member to role" 
+| where TargetResources[0].modifiedProperties has "Global Administrator" or TargetResources[0].modifiedProperties has "Company Administrator"
+| project TimeGenerated, AddedMember=tostring(TargetResources[0].targetDisplayName), Role=tostring(TargetResources[0].modifiedProperties[0].newValue), PerformedBy=tostring(InitiatedBy.user.userPrincipalName)

@@ -1,0 +1,2 @@
+EmailAttachmentInfo
+| where FileExtension in~("htm","html") and AttachmentSize > 100000

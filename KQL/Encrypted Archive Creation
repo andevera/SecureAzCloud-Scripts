@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where FileName in~("7z.exe","7za.exe","winrar.exe","rar.exe") 
+| where ProcessCommandLine contains "-p"

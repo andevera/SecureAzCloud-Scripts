@@ -1,0 +1,4 @@
+DeviceProcessEvents
+| where OSPlatform == "Linux"
+| where FileName in~("gcc","g++","make")
+| where ProcessCommandLine has "/tmp"

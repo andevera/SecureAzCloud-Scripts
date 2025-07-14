@@ -1,0 +1,5 @@
+Syslog
+| where ProcessName == "sshd" and Message contains "Failed password"
+| parse Message with * " from " AttackerIP:string " port " * 
+| summarize failures=count() by AttackerIP, bin(TimeGenerated, 5m)
+| where failures > 10

@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "NetworkSecurityGroupFlowEvent" or Category == "AzureFirewallNetworkRuleLog"
+| where DestinationIp == "169.254.169.254"
+| project TimeGenerated, SourceIp, VM=ResourceId

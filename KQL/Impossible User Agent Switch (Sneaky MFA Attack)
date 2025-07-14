@@ -1,0 +1,3 @@
+SigninLogs
+| summarize UAset = make_set(UserAgent) by CorrelationId, UserPrincipalName
+| where array_length(UAset) > 3

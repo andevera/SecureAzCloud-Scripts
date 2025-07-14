@@ -1,0 +1,4 @@
+GitHubAudit
+| where Action == "git.clone"
+| summarize CloneCount=count() by Actor, bin(TimeGenerated, 1h)
+| where CloneCount > 20

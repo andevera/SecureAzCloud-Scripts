@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where OSPlatform == "Linux"
+| where ProcessCommandLine has_any("kdevtmpfsi","xmrig","minerd")

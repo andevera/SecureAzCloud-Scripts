@@ -1,0 +1,4 @@
+AzureActivity
+| where OperationName contains "/delete"
+| summarize deletions=count() by Caller, bin(TimeGenerated, 30m)
+| where deletions > 5

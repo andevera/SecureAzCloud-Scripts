@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where OSPlatform == "Linux"
+| where ProcessCommandLine contains "LD_PRELOAD"

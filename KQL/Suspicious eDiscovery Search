@@ -1,0 +1,3 @@
+OfficeActivity
+| where ActivityDisplayName has "Search-Mailbox" or ActivityDisplayName has "ComplianceSearch"
+| where UserRole != "Admin"

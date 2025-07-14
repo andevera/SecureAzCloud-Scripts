@@ -1,0 +1,3 @@
+SigninLogs
+| where ClientAppUsed in ("Legacy POP","Legacy IMAP","SMTP") // example legacy protocols
+| where ResultType == 0 and UserPrincipalName has_cs "admin"

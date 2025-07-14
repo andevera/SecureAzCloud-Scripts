@@ -1,0 +1,4 @@
+Syslog
+| where ProcessName in~("modprobe","insmod")
+| where Message contains "module" 
+| where User != "root"

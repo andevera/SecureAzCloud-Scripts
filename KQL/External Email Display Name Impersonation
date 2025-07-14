@@ -1,0 +1,3 @@
+EmailEvents
+| where SenderFromAddress !endswith "@yourdomain.com"
+| where SenderDisplayName in~ (YourOrg.Users | project DisplayName)  // pseudo-code: compare with internal user list

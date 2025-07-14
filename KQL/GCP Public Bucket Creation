@@ -1,0 +1,3 @@
+GCPCloudLogging
+| where protoPayload.resourceName contains "storage.googleapis.com" and protoPayload.methodName == "storage.setIamPermissions"
+| where protoPayload.serviceData.policyBindings contains "allUsers"

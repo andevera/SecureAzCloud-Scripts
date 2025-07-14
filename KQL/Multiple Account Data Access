@@ -1,0 +1,4 @@
+OfficeActivity
+| where ActivityDisplayName has "FileAccessed"
+| summarize SitesAccessed=dcount(SiteUrl) by UserId, bin(TimeGenerated, 1d)
+| where SitesAccessed > 10 and UserId !has "service"

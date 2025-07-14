@@ -1,0 +1,2 @@
+AppLogs
+| where Message contains "ignore all previous" or Message contains "you are now DAN" or Message contains "begin hacking mode"

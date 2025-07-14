@@ -1,0 +1,3 @@
+AzureActivity 
+| where OperationName has "pipelines/create" or OperationName has "RunDefinition.Create"
+| project TimeGenerated, Caller, Details=Properties

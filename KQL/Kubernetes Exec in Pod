@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "kube-audit"
+| where Log_s contains "\"verb\":\"create\"" and Log_s contains "\"/exec\""
+| project TimeGenerated, parse_json(Log_s).user.username, parse_json(Log_s).requestURI

@@ -1,0 +1,3 @@
+DeviceProcessEvents 
+| where ProcessParentFileName in~("npm","npm.cmd","pip","pip3","yarn") 
+| where FileName in~("cmd.exe","bash","powershell.exe","sh")

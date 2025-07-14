@@ -1,0 +1,3 @@
+SigninLogs
+| where UserPrincipalName has "_breakglass" or UserPrincipalName has "onmicrosoft.com"
+| where ResultType == 0

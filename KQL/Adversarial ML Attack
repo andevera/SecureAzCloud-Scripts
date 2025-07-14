@@ -1,0 +1,3 @@
+AppLogs
+| where Message contains "model accuracy" or Message contains "confidence"
+| where Message contains "drop" or Message contains "low"

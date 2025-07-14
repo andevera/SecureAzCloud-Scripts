@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where FileName in~("cscript.exe","wscript.exe")
+| where ProcessCommandLine has_any(".js", ".vbs", ".jse")

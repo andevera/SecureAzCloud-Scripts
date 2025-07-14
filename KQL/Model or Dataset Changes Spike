@@ -1,0 +1,4 @@
+AzureActivity
+| where OperationName contains "Models" and OperationName contains "/write"
+| summarize Changes=count() by Caller, bin(TimeGenerated, 1d)
+| where Changes > 5

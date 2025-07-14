@@ -1,0 +1,3 @@
+DnsEvents
+| where Domain matches regex @".*\.(zip|xyz|tk|cn)$"
+| project TimeGenerated, ClientIP, Domain

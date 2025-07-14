@@ -1,0 +1,4 @@
+AWSCloudTrail
+| where EventName == "AuthorizeSecurityGroupIngress"
+| where requestParameters.ipProtocol == "tcp" and requestParameters.cidrIp == "0.0.0.0/0"
+| where requestParameters.fromPort in ("22","3389")

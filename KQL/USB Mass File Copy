@@ -1,0 +1,4 @@
+DeviceFileEvents
+| where ActionType == "FileCopiedToRemovableMedia"
+| summarize TotalBytes=sum(FileSize) by DeviceName, InitiatingUser
+| where TotalBytes > 1000000000  // >1GB copied

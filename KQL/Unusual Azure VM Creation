@@ -1,0 +1,4 @@
+AzureActivity
+| where OperationName == "Microsoft.Compute/virtualMachines/write" and ActivityStatus == "Succeeded"
+| where Location !in ("us-east","centralus")  // adjust to typical regions
+| project TimeGenerated, Caller, Location, Details=Properties

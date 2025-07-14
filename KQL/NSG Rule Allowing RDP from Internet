@@ -1,0 +1,4 @@
+AzureActivity
+| where OperationName startswith "Microsoft.Network/networkSecurityGroups/securityRules"
+| where Properties contains "3389" and Properties contains "\"0.0.0.0/0\""
+| project TimeGenerated, Caller, Details=Properties

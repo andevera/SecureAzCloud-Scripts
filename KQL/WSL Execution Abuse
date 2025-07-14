@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where FileName == "bash.exe" or ProcessCommandLine has "-c /mnt/" 
+| where ProcessCommandLine has_any("wget","curl","powershell")

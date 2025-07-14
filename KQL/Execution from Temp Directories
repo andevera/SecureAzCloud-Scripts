@@ -1,0 +1,4 @@
+DeviceProcessEvents
+| where OSPlatform == "Linux"
+| where FilePath has_any("/tmp/","/dev/shm") 
+| where ActionType == "ProcessCreated"

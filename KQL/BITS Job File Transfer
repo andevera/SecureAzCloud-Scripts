@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where (FileName == "bitsadmin.exe" or (FileName == "powershell.exe" and ProcessCommandLine has "Start-BitsTransfer"))
+| where ProcessCommandLine has_any("http://","https://")

@@ -1,0 +1,4 @@
+Syslog
+| where Message contains "sudo" and Message contains "authentication failure"
+| summarize fails=count() by User, bin(TimeGenerated, 5m)
+| where fails > 5

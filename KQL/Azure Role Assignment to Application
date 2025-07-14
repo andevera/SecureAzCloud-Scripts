@@ -1,0 +1,4 @@
+AzureActivity
+| where OperationName == "Microsoft.Authorization/roleAssignments/write"
+| where Properties has "\"PrincipalType\": \"ServicePrincipal\""
+| project TimeGenerated, Caller, RoleDefinitionName=tostring(parse_json(Properties).roleDefinitionName), Principal=tostring(parse_json(Properties).principalName)

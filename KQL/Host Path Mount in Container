@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where Category == "kube-audit"
+| where Log_s contains "\"hostPath\": {"
+| project TimeGenerated, Log_s // indicates a hostPath volume usage

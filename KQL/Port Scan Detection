@@ -1,0 +1,3 @@
+CommonSecurityLog
+| summarize PortsScanned=dcount(DestinationPort) by SourceIP, Target=DestinationIP, bin(TimeGenerated, 5m)
+| where PortsScanned > 50

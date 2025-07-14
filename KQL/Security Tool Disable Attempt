@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where FileName in~("sc.exe","net.exe","powershell.exe")
+| where ProcessCommandLine matches regex @"(?i)(stop|disable).*?(WinDefend|Sense|WDPrint|SecurityHealth)"

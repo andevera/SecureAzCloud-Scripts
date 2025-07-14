@@ -1,0 +1,2 @@
+DeviceProcessEvents
+| where FileName startswith "rclone" or ProcessCommandLine has_any("rclone copy","rclone sync")
